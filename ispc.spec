@@ -1,6 +1,6 @@
 Name:		ispc
 Version:	1.9.1
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	C-based SPMD programming language compiler
 
 License:	BSD
@@ -20,6 +20,10 @@ BuildRequires:	ncurses-devel
 BuildRequires:	/usr/lib/crt1.o
 %endif
 BuildRequires:	zlib-devel
+# Conditional build for f24 and less
+%if 0%{?fedora} <= 24 || 0%{?rhel} <= 7
+BuildRequires:	python
+%endif
 # Set verbose compilation and remove -Werror on Makefile
 Patch0:		Makefile.patch
 
@@ -43,9 +47,11 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Tue Aug 23 2016 Luya Tshimbalanga <luya@fedoraproject.org> 1.9.1-7
+- Added conditional build for Fedora 24- and rhel7-
+
 * Tue Aug 23 2016 Luya Tshimbalanga <luya@fedoraproject.org> 1.9.1-6
 - Included OPT and LDFLAGS on build line
-
 
 * Tue Aug 23 2016 Luya Tshimbalanga <luya@fedoraproject.org> 1.9.1-5
 - Improved patch to remove -Werror line
