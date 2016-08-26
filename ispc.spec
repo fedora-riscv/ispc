@@ -1,6 +1,6 @@
 Name:		ispc
 Version:	1.9.1
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	C-based SPMD programming language compiler
 
 License:	BSD
@@ -14,6 +14,7 @@ BuildRequires:	make
 BuildRequires:	bison
 BuildRequires:	flex 
 BuildRequires:	ncurses-devel
+ExclusiveArch:	%{arm} %{ix86} x86_64
 # Hardcoded path from 32-bit glibc-devel needed to build
 # See https://github.com/ispc/ispc/wiki/Building-ispc:-Linux-and-Mac-OS-X
 %ifarch x86_64
@@ -47,6 +48,9 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Fri Aug 26 2016 Dan Horák <dan[at]danny.cz> 1.9.1-8
+- set ExclusiveArch
+
 * Tue Aug 23 2016 Luya Tshimbalanga <luya@fedoraproject.org> 1.9.1-7
 - Added conditional build for Fedora 24- and rhel7-
 
