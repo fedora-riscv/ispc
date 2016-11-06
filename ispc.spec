@@ -1,6 +1,6 @@
 Name:		ispc
 Version:	1.9.1
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	C-based SPMD programming language compiler
 
 License:	BSD
@@ -48,6 +48,9 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Sun Nov 06 2016 Luya Tshimbalanga <luya@fedoraproject.org> - 1.9.1-9
+- Rebuilt agaisnt llvm
+
 * Fri Aug 26 2016 Dan Horák <dan[at]danny.cz> 1.9.1-8
 - set ExclusiveArch
 
