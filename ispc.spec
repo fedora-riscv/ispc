@@ -1,11 +1,14 @@
+%global commit a618ad45bf6a83e0f4a82378c62b5621c6719983
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
 Name:		ispc
 Version:	1.9.1
-Release:	12%{?dist}
+Release:	14.git.20170324.%{shortcommit}%{?dist}
 Summary:	C-based SPMD programming language compiler
 
 License:	BSD
 URL:		https://ispc.github.io/
-Source0:	https://github.com/%{name}/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz 
+Source0:	https://github.com/%{name}/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 
 BuildRequires:	llvm-devel
 BuildRequires:	clang-devel
@@ -33,7 +36,7 @@ A compiler for a variant of the C programming language, with extensions for
 "single program, multiple data" (SPMD) programming.
 
 %prep
-%autosetup
+%autosetup -n %{name}-%{commit}
 
 
 %build
@@ -48,8 +51,14 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
-* Mon May 15 2017 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.1-12
+* Thu May 25 2017 Peter Robinson <pbrobinson@fedoraproject.org> 1.9.1-14.git.20170324.a618ad4
+- Rebuild clang/llvm-4
+
+* Mon May 15 2017 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.1-13.git.20170324.a618ad4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_27_Mass_Rebuild
+
+* Fri Mar 24 2017 Igor Gnatenko <ignatenko@redhat.com> - 1.9.1-12.git.20170324.a618ad4
+- Update to git snapshot which support LLVM4
 
 * Thu Mar 16 2017 Luya Tshimbalanga <luya@fedoraproject.org> - 1.9.1-11
 - Rebuild for llvm 3.9
