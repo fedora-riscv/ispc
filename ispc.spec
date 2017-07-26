@@ -3,7 +3,7 @@
 
 Name:		ispc
 Version:	1.9.1
-Release:	14.git.20170324.%{shortcommit}%{?dist}
+Release:	15.git.20170324.%{shortcommit}%{?dist}
 Summary:	C-based SPMD programming language compiler
 
 License:	BSD
@@ -51,6 +51,9 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.1-15.git.20170324.a618ad4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Thu May 25 2017 Peter Robinson <pbrobinson@fedoraproject.org> 1.9.1-14.git.20170324.a618ad4
 - Rebuild clang/llvm-4
 
