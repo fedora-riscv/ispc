@@ -1,9 +1,9 @@
-%global commit a618ad45bf6a83e0f4a82378c62b5621c6719983
+%global commit 6dc0ccc404c877531f06b42881272f15f4209b17
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
 Version:	1.9.1
-Release:	16.git.20170324.%{shortcommit}%{?dist}
+Release:	17.git.20171023.%{shortcommit}%{?dist}
 Summary:	C-based SPMD programming language compiler
 
 License:	BSD
@@ -30,6 +30,7 @@ BuildRequires:	python
 %endif
 # Set verbose compilation and remove -Werror on Makefile
 Patch0:		Makefile.patch
+Patch1:		0001-Remove-uses-of-LLVM-dump-functions.patch
 
 %description
 A compiler for a variant of the C programming language, with extensions for
@@ -51,6 +52,9 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Tue Oct 24 2017 Tom Stellard <tstellar@redhat.com> - 1.9.1-17.git.20171023.6dc0ccc
+- Rebase to more current snapshot for LLVM 5.0 support.
+
 * Wed Aug 02 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.1-16.git.20170324.a618ad4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
