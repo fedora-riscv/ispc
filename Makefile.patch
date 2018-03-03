@@ -1,10 +1,10 @@
---- ispc-1.9.1/Makefile.orig	2016-07-08 04:13:52.000000000 -0700
-+++ ispc-1.9.1/Makefile	2016-08-23 00:06:51.198500039 -0700
-@@ -166,11 +166,11 @@
+--- Makefile.orig	2017-11-10 15:07:30.000000000 -0800
++++ Makefile	2018-03-02 22:43:18.144747339 -0800
+@@ -167,11 +167,11 @@
  	$(LLVM_VERSION_DEF) \
  	-Wall \
  	-DBUILD_DATE="\"$(BUILD_DATE)\"" -DBUILD_VERSION="\"$(BUILD_VERSION)\"" \
--	-Wno-sign-compare -Wno-unused-function -Werror
+-	-Wno-sign-compare -Wno-unused-function $(WERROR)
 +	-Wno-sign-compare -Wno-unused-function
  
  # if( !($(LLVM_VERSION) == LLVM_3_2 || $(LLVM_VERSION) == LLVM_3_3 || $(LLVM_VERSION) == LLVM_3_4))
@@ -14,7 +14,7 @@
  endif
  ifneq ($(ARM_ENABLED), 0)
      CXXFLAGS+=-DISPC_ARM_ENABLED
-@@ -232,7 +232,7 @@
+@@ -233,7 +233,7 @@
  
  depend: llvm_check $(CXX_SRC) $(HEADERS)
  	@echo Updating dependencies
@@ -23,7 +23,7 @@
  
  -include depend
  
-@@ -262,7 +262,7 @@
+@@ -263,7 +263,7 @@
  
  ispc: print_llvm_src dirs $(OBJS)
  	@echo Creating ispc executable
@@ -32,7 +32,7 @@
  
  # Use clang as a default compiler, instead of gcc
  # This is default now.
-@@ -284,77 +284,77 @@
+@@ -285,19 +285,19 @@
  
  objs/%.o: %.cpp
  	@echo Compiling $<
@@ -56,8 +56,7 @@
  
  objs/parse.cc: parse.yy
  	@echo Running bison on $<
--	@$(YACC) -o $@ $<
-+	$(YACC) -o $@ $<
+@@ -305,7 +305,7 @@
  
  objs/parse.o: objs/parse.cc $(HEADERS)
  	@echo Compiling $<
@@ -66,8 +65,7 @@
  
  objs/lex.cpp: lex.ll 
  	@echo Running flex on $<
--	@$(LEX) -o $@ $<
-+	$(LEX) -o $@ $<
+@@ -313,49 +313,49 @@
  
  objs/lex.o: objs/lex.cpp $(HEADERS) objs/parse.cc
  	@echo Compiling $<

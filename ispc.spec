@@ -1,15 +1,23 @@
+%global with_snapshot 0
 %global commit 6dc0ccc404c877531f06b42881272f15f4209b17
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.9.1
+Version:	1.9.2
+%if %{with_snapshot}
 Release:	18.git.20171023.%{shortcommit}%{?dist}
+%else
+Release:	1%{?dist}
+%endif
 Summary:	C-based SPMD programming language compiler
 
 License:	BSD
 URL:		https://ispc.github.io/
+%if %{with_snapshot}
 Source0:	https://github.com/%{name}/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
-
+%else
+Source0:	https://github.com/%{name}/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
+%endif
 BuildRequires:	llvm-devel
 BuildRequires:	clang-devel
 BuildRequires:	gcc-c++
@@ -37,8 +45,11 @@ A compiler for a variant of the C programming language, with extensions for
 "single program, multiple data" (SPMD) programming.
 
 %prep
+%if %{with_snapshot}
 %autosetup -n %{name}-%{commit}
-
+%else
+%autosetup -n %{name}-%{version}
+%endif
 
 %build
 %make_build gcc OPT="%{optflags}" LDFLAGS="%{__global_ldflags}" 
@@ -52,6 +63,9 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Fri Mar 02 2018 Luya Tshimbalanga <luya@fedoraproject.org> - 1.9.2-1
+- Update to 1.9.2
+
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.1-18.git.20171023.6dc0ccc
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
