@@ -1,11 +1,11 @@
-%global with_snapshot 0
-%global commit 6dc0ccc404c877531f06b42881272f15f4209b17
+%global with_snapshot 1
+%global commit 07fe054237ff030c8e936d40c53212073976d67e
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.9.2
+Version:	1.9.3
 %if %{with_snapshot}
-Release:	18.git.20171023.%{shortcommit}%{?dist}
+Release:	0.1.git.20180222.%{shortcommit}%{?dist}
 %else
 Release:	1%{?dist}
 %endif
@@ -23,6 +23,7 @@ BuildRequires:	clang-devel
 BuildRequires:	gcc-c++
 BuildRequires:	make
 BuildRequires:	bison
+BuildRequires:	doxygen
 BuildRequires:	flex 
 BuildRequires:	ncurses-devel
 ExclusiveArch:	%{arm} %{ix86} x86_64
@@ -63,6 +64,10 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Sat Mar 03 2018 Luya Tshimbalanga <luya@fedoraproject.org> - 1.9.3-0.1.git.20180222.07fe054 
+- Update to 1.9.3 git snapshot
+- Use new guideline versioning semantique for snapshot
+
 * Fri Mar 02 2018 Luya Tshimbalanga <luya@fedoraproject.org> - 1.9.2-1
 - Update to 1.9.2
 
