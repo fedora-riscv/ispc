@@ -5,9 +5,9 @@
 Name:		ispc
 Version:	1.9.3
 %if %{with_snapshot}
-Release:	0.1.git.20180222.%{shortcommit}%{?dist}
+Release:	0.2.git.20180222.%{shortcommit}%{?dist}
 %else
-Release:	1%{?dist}
+Release:	2%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -35,7 +35,7 @@ BuildRequires:	/usr/lib/crt1.o
 BuildRequires:	zlib-devel
 # Conditional build for f24 and less
 %if 0%{?fedora} <= 24 || 0%{?rhel} <= 7
-BuildRequires:	python
+BuildRequires:	python2
 %endif
 # Set verbose compilation and remove -Werror on Makefile
 Patch0:		Makefile.patch
@@ -64,6 +64,10 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Thu Mar 15 2018 Iryna Shcherbina <ishcherb@redhat.com> - 1.9.3-0.2.git.20180222.07fe054
+- Update Python 2 dependency declarations to new packaging standards
+  (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
+
 * Sat Mar 03 2018 Luya Tshimbalanga <luya@fedoraproject.org> - 1.9.3-0.1.git.20180222.07fe054 
 - Update to 1.9.3 git snapshot
 - Use new guideline versioning semantique for snapshot
