@@ -5,9 +5,9 @@
 Name:		ispc
 Version:	1.9.3
 %if %{with_snapshot}
-Release:	0.2.git.20180222.%{shortcommit}%{?dist}
+Release:	0.3.git.20180222.%{shortcommit}%{?dist}
 %else
-Release:	2%{?dist}
+Release:	3%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -64,6 +64,9 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.3-0.3.git.20180222.07fe054
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Thu Mar 15 2018 Iryna Shcherbina <ishcherb@redhat.com> - 1.9.3-0.2.git.20180222.07fe054
 - Update Python 2 dependency declarations to new packaging standards
   (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
