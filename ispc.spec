@@ -47,9 +47,9 @@ A compiler for a variant of the C programming language, with extensions for
 
 %prep
 %if %{with_snapshot}
-%autosetup -p1 -n %{name}-%{commit}
+%autosetup -p0 -n %{name}-%{commit}
 %else
-%autosetup -p1 -n %{name}-%{version}
+%autosetup -p0 -n %{name}-%{version}
 %endif
 
 sed -i 's|set(CMAKE_C_COMPILER "clang")|set(CMAKE_C_COMPILER "gcc")|g' CMakeLists.txt
