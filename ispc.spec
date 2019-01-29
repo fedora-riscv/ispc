@@ -62,7 +62,7 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %cmake -DISPC_INCLUDE_TESTS=OFF \
 	-DCMAKE_BUILD_TYPE=release \
 	.
-%make_build OPT="%{optflags}" LDFLAGS="%{__global_ldflags}"
+%make_build gcc OPT="%{optflags} -fPIC" LDFLAGS="%{__global_ldflags} -fPIC"
 %install
 install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 

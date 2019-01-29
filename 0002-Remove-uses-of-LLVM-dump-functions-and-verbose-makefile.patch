@@ -1,0 +1,199 @@
+diff -ru ispc-1.10.0.origin/Makefile ispc-1.10.0/Makefile
+--- ispc-1.10.0.origin/Makefile	2019-01-18 17:23:04.000000000 -0800
++++ ispc-1.10.0/Makefile	2019-01-28 01:39:21.531542020 -0800
+@@ -175,11 +175,11 @@
+ 	$(LLVM_VERSION_DEF) \
+ 	-Wall \
+ 	-DBUILD_DATE="\"$(BUILD_DATE)\"" -DBUILD_VERSION="\"$(BUILD_VERSION)\"" \
+-	-Wno-sign-compare -Wno-unused-function $(WERROR)
++	-Wno-sign-compare -Wno-unused-function
+ 
+ # if( !($(LLVM_VERSION) == LLVM_3_2 || $(LLVM_VERSION) == LLVM_3_3 || $(LLVM_VERSION) == LLVM_3_4))
+ ifeq (,$(filter $(LLVM_VERSION), LLVM_3_2 LLVM_3_3 LLVM_3_4))
+-	CXXFLAGS+=-std=c++11 -Wno-c99-extensions -Wno-deprecated-register -fno-rtti
++	CXXFLAGS+=-std=c++11 -fno-rtti
+ endif
+ ifneq ($(ARM_ENABLED), 0)
+     CXXFLAGS+=-DISPC_ARM_ENABLED
+@@ -240,7 +240,7 @@
+ 
+ depend: llvm_check $(CXX_SRC) $(HEADERS)
+ 	@echo Updating dependencies
+-	@$(CXX) -MM $(CXXFLAGS) $(CXX_SRC) | sed 's_^\([a-z]\)_objs/\1_g' > depend
++	$(CXX) -MM $(CXXFLAGS) $(CXX_SRC) | sed 's_^\([a-z]\)_objs/\1_g' > depend
+ 
+ -include depend
+ 
+@@ -273,7 +273,7 @@
+ 
+ ispc: print_deprecation_msg print_llvm_src dirs $(OBJS)
+ 	@echo Creating ispc executable
+-	@$(CXX) $(OPT) $(LDFLAGS) -o $@ $(OBJS) $(ISPC_LIBS)
++	$(CXX) $(OPT) $(LDFLAGS) -o $@ $(OBJS) $(ISPC_LIBS)
+ 
+ # Use clang as a default compiler, instead of gcc
+ # This is default now.
+@@ -295,77 +295,77 @@
+ 
+ objs/%.o: ${SRC_DIR}/%.cpp
+ 	@echo Compiling $<
+-	@$(CXX) $(CXXFLAGS) -o $@ -c $<
++	$(CXX) $(CXXFLAGS) -o $@ -c $<
+ 
+ objs/cbackend.o: ${SRC_DIR}/cbackend.cpp
+ 	@echo Compiling $<
+-	@$(CXX) -fno-rtti -fno-exceptions $(CXXFLAGS) -o $@ -c $<
++	$(CXX) -fno-rtti -fno-exceptions $(CXXFLAGS) -o $@ -c $<
+ 
+ objs/opt.o: ${SRC_DIR}/opt.cpp
+ 	@echo Compiling $<
+-	@$(CXX) -fno-rtti $(CXXFLAGS) -o $@ -c $<
++	$(CXX) -fno-rtti $(CXXFLAGS) -o $@ -c $<
+ 
+ objs/%.o: objs/%.cpp
+ 	@echo Compiling $<
+-	@$(CXX) $(CXXFLAGS) -o $@ -c $<
++	$(CXX) $(CXXFLAGS) -o $@ -c $<
+ 
+ objs/parse.cc: $(SRC_DIR)/parse.yy
+ 	@echo Running bison on $<
+-	@$(YACC) -o $@ $<
++	$(YACC) -o $@ $<
+ 
+ objs/parse.o: objs/parse.cc $(HEADERS)
+ 	@echo Compiling $<
+-	@$(CXX) $(CXXFLAGS) -o $@ -c $<
++	$(CXX) $(CXXFLAGS) -o $@ -c $<
+ 
+ objs/lex.cpp: $(SRC_DIR)/lex.ll
+ 	@echo Running flex on $<
+-	@$(LEX) -o $@ $<
++	$(LEX) -o $@ $<
+ 
+ objs/lex.o: objs/lex.cpp $(HEADERS) objs/parse.cc
+ 	@echo Compiling $<
+-	@$(CXX) $(CXXFLAGS) -o $@ -c $<
++	$(CXX) $(CXXFLAGS) -o $@ -c $<
+ 
+ objs/builtins-dispatch.cpp: builtins/dispatch.ll builtins/util.m4 builtins/util-nvptx.m4 builtins/svml.m4 $(wildcard builtins/*common.ll)
+ 	@echo Creating C++ source from builtins definition file $<
+-	@m4 -Ibuiltins/ -DLLVM_VERSION=$(LLVM_VERSION) -DBUILD_OS=UNIX $< | python bitcode2cpp.py $< > $@
++	m4 -Ibuiltins/ -DLLVM_VERSION=$(LLVM_VERSION) -DBUILD_OS=UNIX $< | python bitcode2cpp.py $< > $@
+ 
+ objs/builtins-%-32bit.cpp: builtins/%.ll builtins/util.m4 builtins/util-nvptx.m4 builtins/svml.m4 $(wildcard builtins/*common.ll)
+ 	@echo Creating C++ source from builtins definition file $< \(32 bit version\)
+-	@m4 -Ibuiltins/ -DLLVM_VERSION=$(LLVM_VERSION) -DBUILD_OS=UNIX -DRUNTIME=32 $< | python bitcode2cpp.py $< 32bit > $@
++	m4 -Ibuiltins/ -DLLVM_VERSION=$(LLVM_VERSION) -DBUILD_OS=UNIX -DRUNTIME=32 $< | python bitcode2cpp.py $< 32bit > $@
+ 
+ objs/builtins-%-64bit.cpp: builtins/%.ll builtins/util.m4 builtins/util-nvptx.m4 builtins/svml.m4 $(wildcard builtins/*common.ll)
+ 	@echo Creating C++ source from builtins definition file $< \(64 bit version\)
+-	@m4 -Ibuiltins/ -DLLVM_VERSION=$(LLVM_VERSION) -DBUILD_OS=UNIX -DRUNTIME=64 $< | python bitcode2cpp.py $< 64bit > $@
++	m4 -Ibuiltins/ -DLLVM_VERSION=$(LLVM_VERSION) -DBUILD_OS=UNIX -DRUNTIME=64 $< | python bitcode2cpp.py $< 64bit > $@
+ 
+ objs/builtins-c-32.cpp: builtins/builtins.c
+ 	@echo Creating C++ source from builtins definition file $<
+-	@$(CLANG) -m32 -emit-llvm -c $< -o - | llvm-dis - | python bitcode2cpp.py c 32 > $@
++	$(CLANG) -m32 -emit-llvm -c $< -o - | llvm-dis - | python bitcode2cpp.py c 32 > $@
+ 
+ objs/builtins-c-64.cpp: builtins/builtins.c
+ 	@echo Creating C++ source from builtins definition file $<
+-	@$(CLANG) -m64 -emit-llvm -c $< -o - | llvm-dis - | python bitcode2cpp.py c 64 > $@
++	$(CLANG) -m64 -emit-llvm -c $< -o - | llvm-dis - | python bitcode2cpp.py c 64 > $@
+ 
+ objs/stdlib_mask1_ispc.cpp: stdlib.ispc
+ 	@echo Creating C++ source from $< for mask1
+-	@$(CLANG) -E -x c -DISPC_MASK_BITS=1 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
++	$(CLANG) -E -x c -DISPC_MASK_BITS=1 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
+ 		python stdlib2cpp.py mask1 > $@
+ 
+ objs/stdlib_mask8_ispc.cpp: stdlib.ispc
+ 	@echo Creating C++ source from $< for mask8
+-	@$(CLANG) -E -x c -DISPC_MASK_BITS=8 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
++	$(CLANG) -E -x c -DISPC_MASK_BITS=8 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
+ 		python stdlib2cpp.py mask8 > $@
+ 
+ objs/stdlib_mask16_ispc.cpp: stdlib.ispc
+ 	@echo Creating C++ source from $< for mask16
+-	@$(CLANG) -E -x c -DISPC_MASK_BITS=16 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
++	$(CLANG) -E -x c -DISPC_MASK_BITS=16 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
+ 		python stdlib2cpp.py mask16 > $@
+ 
+ objs/stdlib_mask32_ispc.cpp: stdlib.ispc
+ 	@echo Creating C++ source from $< for mask32
+-	@$(CLANG) -E -x c -DISPC_MASK_BITS=32 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
++	$(CLANG) -E -x c -DISPC_MASK_BITS=32 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
+ 		python stdlib2cpp.py mask32 > $@
+ 
+ objs/stdlib_mask64_ispc.cpp: stdlib.ispc
+ 	@echo Creating C++ source from $< for mask64
+-	@$(CLANG) -E -x c -DISPC_MASK_BITS=64 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
++	$(CLANG) -E -x c -DISPC_MASK_BITS=64 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
+ 		python stdlib2cpp.py mask64 > $@
+diff -ru ispc-1.10.0.origin/src/llvmutil.cpp ispc-1.10.0/src/llvmutil.cpp
+--- ispc-1.10.0.origin/src/llvmutil.cpp	2019-01-18 17:23:04.000000000 -0800
++++ ispc-1.10.0/src/llvmutil.cpp	2019-01-28 14:58:14.128971438 -0800
+@@ -45,6 +45,7 @@
+   #include <llvm/IR/Instructions.h>
+   #include <llvm/IR/BasicBlock.h>
+ #endif
++#include <llvm/Support/raw_os_ostream.h>
+ #include <set>
+ #include <map>
+ 
+@@ -1550,7 +1551,7 @@
+         return;
+ 
+     fprintf(stderr, "  ");
+-    v->dump();
++    v->print(llvm::errs());
+     done.insert(v);
+ 
+     if (inst == NULL)
+diff -ru ispc-1.10.0.origin/src/opt.cpp ispc-1.10.0/src/opt.cpp
+--- ispc-1.10.0.origin/src/opt.cpp	2019-01-18 17:23:04.000000000 -0800
++++ ispc-1.10.0/src/opt.cpp	2019-01-28 15:30:04.650372035 -0800
+@@ -173,7 +173,7 @@
+                   strlen(getenv("FUNC"))))) {                           \
+         fprintf(stderr, "Start of " NAME "\n");                \
+         fprintf(stderr, "---------------\n");                  \
+-        bb.dump();                                             \
++        bb.print(llvm::errs());                                             \
+         fprintf(stderr, "---------------\n\n");                \
+     } else /* eat semicolon */
+ 
+@@ -184,7 +184,7 @@
+                   strlen(getenv("FUNC"))))) {                           \
+         fprintf(stderr, "End of " NAME " %s\n", modifiedAny ? "** CHANGES **" : ""); \
+         fprintf(stderr, "---------------\n");                  \
+-        bb.dump();                                             \
++        bb.print(llvm::errs());                                             \
+         fprintf(stderr, "---------------\n\n");                \
+     } else /* eat semicolon */
+ 
+@@ -537,7 +537,7 @@
+ Optimize(llvm::Module *module, int optLevel) {
+     if (g->debugPrint) {
+         printf("*** Code going into optimization ***\n");
+-        module->dump();
++        module->print(llvm::errs(), nullptr);
+     }
+     DebugPassManager optPM;
+     optPM.add(llvm::createVerifierPass(),0);
+@@ -932,7 +932,7 @@
+ 
+     if (g->debugPrint) {
+         printf("\n*****\nFINAL OUTPUT\n*****\n");
+-        module->dump();
++        module->print(llvm::errs(), nullptr);
+     }
+ 
+ }
+@@ -4895,7 +4895,7 @@
+ DebugPass::runOnModule(llvm::Module &module) {
+     fprintf(stderr, "%s", str_output);
+     fflush(stderr);
+-    module.dump();
++    module.print(llvm::errs(), nullptr);
+     return true;
+ }
+ 
