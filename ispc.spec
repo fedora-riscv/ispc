@@ -7,7 +7,7 @@ Version:	1.10.0
 %if %{with_snapshot}
 Release:	0.5.git.20190102.%{shortcommit}%{?dist}
 %else
-Release:	1%{?dist}
+Release:	2%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -38,8 +38,7 @@ BuildRequires:	zlib-devel
 
 
 # Set verbose compilation and remove -Werror on Makefile
-Patch0:		Makefile.patch
-#Patch1:		0001-Remove-uses-of-LLVM-dump-functions.patch
+Patch:		0002-Remove-uses-of-LLVM-dump-functions-and-verbose-makefile.patch
 
 %description
 A compiler for a variant of the C programming language, with extensions for
@@ -47,9 +46,9 @@ A compiler for a variant of the C programming language, with extensions for
 
 %prep
 %if %{with_snapshot}
-%autosetup -p0 -n %{name}-%{commit}
+%autosetup -p1 -n %{name}-%{commit}
 %else
-%autosetup -p0 -n %{name}-%{version}
+%autosetup -p1 -n %{name}-%{version}
 %endif
 
 sed -i 's|set(CMAKE_C_COMPILER "clang")|set(CMAKE_C_COMPILER "gcc")|g' CMakeLists.txt
@@ -59,13 +58,11 @@ sed -i 's|set(CMAKE_CXX_COMPILER "clang++")|set(CMAKE_CXX_COMPILER "g++")|g' CMa
 pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 
 %build
-mkdir build
-pushd build
 # Disable test otherwise build fails
 %cmake -DISPC_INCLUDE_TESTS=OFF \
-	..
-popd
-%make_build gcc OPT="%{optflags}" LDFLAGS="%{__global_ldflags}"
+	-DCMAKE_BUILD_TYPE=release \
+	.
+%make_build OPT="%{optflags}" LDFLAGS="%{__global_ldflags}"
 %install
 install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 
@@ -74,7 +71,10 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
-* Sat Jan 19 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.10.0
+* Sat Jan 19 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.10.0-2
+- Patch for Makefile and remove llvm dump
+
+* Sat Jan 19 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.10.0-1
 - Update to 1.10.0
 
 * Wed Dec 26 2018 Luya Tshimbalanga <luya@fedoraproject.org> - 1.9.3-0.5.git.20190102.e338aaa
