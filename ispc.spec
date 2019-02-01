@@ -5,9 +5,9 @@
 Name:		ispc
 Version:	1.10.0
 %if %{with_snapshot}
-Release:	0.5.git.20190102.%{shortcommit}%{?dist}
+Release:	0.6.git.20190102.%{shortcommit}%{?dist}
 %else
-Release:	2%{?dist}
+Release:	3%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -71,6 +71,9 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Sat Jan 19 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.10.0-2
 - Patch for Makefile and remove llvm dump
 
