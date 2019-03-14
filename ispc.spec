@@ -1,13 +1,13 @@
 %global with_snapshot 0
-%global commit e338aaaebcf0193e194b13267bc69e7a0ec4fa4d
+%global commit 34da2d23bbf32abf44da11d2cdca595dc7318cec
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.10.0
+Version:	1.10.0	
 %if %{with_snapshot}
-Release:	0.6.git.20190102.%{shortcommit}%{?dist}
+Release:	20190304.%{shortcommit}%{?dist}
 %else
-Release:	3%{?dist}
+Release:	4%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -26,7 +26,7 @@ BuildRequires:	flex
 BuildRequires:	gcc-c++
 BuildRequires:	llvm-devel
 BuildRequires:	ncurses-devel
-BuildRequires:	python2
+BuildRequires:	python2-devel
 BuildRequires:	/usr/bin/pathfix.py
 ExclusiveArch:	%{arm} %{ix86} x86_64
 # Hardcoded path from 32-bit glibc-devel needed to build
@@ -38,7 +38,7 @@ BuildRequires:	zlib-devel
 
 
 # Set verbose compilation and remove -Werror on Makefile
-Patch:		0002-Remove-uses-of-LLVM-dump-functions-and-verbose-makefile.patch
+Patch1:		0002-Remove-uses-of-LLVM-dump-functions-and-verbose-makefile.patch
 
 %description
 A compiler for a variant of the C programming language, with extensions for
@@ -51,6 +51,7 @@ A compiler for a variant of the C programming language, with extensions for
 %autosetup -p1 -n %{name}-%{version}
 %endif
 
+# Use gcc rather clang
 sed -i 's|set(CMAKE_C_COMPILER "clang")|set(CMAKE_C_COMPILER "gcc")|g' CMakeLists.txt
 sed -i 's|set(CMAKE_CXX_COMPILER "clang++")|set(CMAKE_CXX_COMPILER "g++")|g' CMakeLists.txt
 
@@ -59,18 +60,24 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 
 %build
 # Disable test otherwise build fails
-%cmake -DISPC_INCLUDE_TESTS=OFF \
+%cmake -DISPC_INCLUDE_TESTS=ON \
 	-DCMAKE_BUILD_TYPE=release \
+	-DCMAKE_INSTALL_PREFIX=%{buildroot}%{_bindir} \
+	-DCMAKE_EXE_LINKER_FLAGS="%{optflags} -fPIE" \
 	.
-%make_build gcc OPT="%{optflags} -fPIC" LDFLAGS="%{__global_ldflags} -fPIC"
+%make_build 
+
 %install
-install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
+%make_install
 
 %files
 %license LICENSE.txt
 %{_bindir}/%{name}
 
 %changelog
+* Thu Mar 07 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.10.0-4
+- Add exe_linker_flag for cmake compilation
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
