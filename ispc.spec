@@ -59,10 +59,10 @@ sed -i 's|set(CMAKE_CXX_COMPILER "clang++")|set(CMAKE_CXX_COMPILER "g++")|g' CMa
 pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 
 %build
-# Disable test otherwise build fails
-%cmake -DISPC_INCLUDE_TESTS=ON \
+# Disable examples otherwise build fails
+%cmake -DISPC_INCLUDE_EXAMPLES=OFF \
 	-DCMAKE_BUILD_TYPE=release \
-	-DCMAKE_INSTALL_PREFIX=%{buildroot}%{_bindir} \
+	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DCMAKE_EXE_LINKER_FLAGS="%{optflags} -fPIE" \
 	.
 %make_build 
@@ -73,10 +73,12 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %files
 %license LICENSE.txt
 %{_bindir}/%{name}
+%{_bindir}/check_isa
 
 %changelog
 * Thu Mar 07 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.10.0-4
 - Add exe_linker_flag for cmake compilation
+- Disable examples
 
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild

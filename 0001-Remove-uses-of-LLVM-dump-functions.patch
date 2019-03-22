@@ -1,12 +1,12 @@
-diff -ru ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec.origin/Makefile ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec/Makefile
---- ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec.origin/Makefile	2019-03-05 12:57:05.000000000 -0800
-+++ ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec/Makefile	2019-03-07 00:15:46.114498397 -0800
+diff -ru ispc-17a9f5cc71e00ef65ea5c53ef5bf38762e0822b4.origin/Makefile ispc-17a9f5c/ispc-17a9f5cc71e00ef65ea5c53ef5bf38762e0822b4/Makefile
+--- ispc-17a9f5cc71e00ef65ea5c53ef5bf38762e0822b4.origin/Makefile	2019-03-21 17:01:22.000000000 -0700
++++ ispc-17a9f5c/ispc-17a9f5cc71e00ef65ea5c53ef5bf38762e0822b4/Makefile	2019-03-22 00:10:25.575169200 -0700
 @@ -175,11 +175,11 @@
  	$(LLVM_VERSION_DEF) \
  	-Wall \
  	-DBUILD_DATE="\"$(BUILD_DATE)\"" -DBUILD_VERSION="\"$(BUILD_VERSION)\"" \
 -	-Wno-sign-compare -Wno-unused-function $(WERROR)
-+	-Wno-sign-compare -Wno-unused-function
++	-Wno-sign-compare -Wno-unused-function 
  
  # if( !($(LLVM_VERSION) == LLVM_3_2 || $(LLVM_VERSION) == LLVM_3_3 || $(LLVM_VERSION) == LLVM_3_4))
  ifeq (,$(filter $(LLVM_VERSION), LLVM_3_2 LLVM_3_3 LLVM_3_4))
@@ -77,9 +77,9 @@ diff -ru ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec.origin/Makefile ispc-34da
  
  objs/builtins-dispatch.cpp: builtins/dispatch.ll builtins/util.m4 builtins/util-nvptx.m4 builtins/svml.m4 $(wildcard builtins/*common.ll)
  	@echo Creating C++ source from builtins definition file $<
-diff -ru ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec.origin/src/llvmutil.cpp ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec/src/llvmutil.cpp
---- /ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec.origin/src/llvmutil.cpp	2019-03-05 12:57:05.000000000 -0800
-+++ ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec/src/llvmutil.cpp	2019-03-07 00:20:05.751941837 -0800
+diff -ru ispc-17a9f5cc71e00ef65ea5c53ef5bf38762e0822b4.origin/src/llvmutil.cpp ispc-17a9f5c/ispc-17a9f5cc71e00ef65ea5c53ef5bf38762e0822b4/src/llvmutil.cpp
+--- ispc-17a9f5cc71e00ef65ea5c53ef5bf38762e0822b4.origin/src/llvmutil.cpp	2019-03-21 17:01:22.000000000 -0700
++++ ispc-17a9f5c/ispc-17a9f5cc71e00ef65ea5c53ef5bf38762e0822b4/src/llvmutil.cpp	2019-03-22 00:17:08.107347545 -0700
 @@ -45,6 +45,7 @@
  #include <llvm/IR/BasicBlock.h>
  #include <llvm/IR/Instructions.h>
@@ -88,6 +88,34 @@ diff -ru ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec.origin/src/llvmutil.cpp i
  #include <map>
  #include <set>
  
+@@ -1041,11 +1042,11 @@
+ 
+ #if 0
+     fprintf(stderr, "all equal: ");
+-    v->dump();
++    v->print(llvm::errs());
+     fprintf(stderr, "\n");
+     llvm::Instruction *inst = llvm::dyn_cast<llvm::Instruction>(v);
+     if (inst) {
+-        inst->getParent()->dump();
++        inst->getParent()->print(llvm::errs());
+         fprintf(stderr, "\n");
+         fprintf(stderr, "\n");
+     }
+@@ -1303,11 +1304,11 @@
+ 
+ #if 0
+     fprintf(stderr, "linear check: ");
+-    v->dump();
++    v->print(llvm::errs());
+     fprintf(stderr, "\n");
+     llvm::Instruction *inst = llvm::dyn_cast<llvm::Instruction>(v);
+     if (inst) {
+-        inst->getParent()->dump();
++        inst->getParent()->print(llvm::errs());
+         fprintf(stderr, "\n");
+         fprintf(stderr, "\n");
+     }
 @@ -1344,7 +1345,7 @@
          return;
  
@@ -97,42 +125,3 @@ diff -ru ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec.origin/src/llvmutil.cpp i
      done.insert(v);
  
      if (inst == NULL)
-diff -ru ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec.origin/src/opt.cpp ispc-34da2d2/ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec/src/opt.cpp
---- ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec.origin/src/opt.cpp	2019-03-05 12:57:05.000000000 -0800
-+++ ispc-34da2d23bbf32abf44da11d2cdca595dc7318cec/src/opt.cpp	2019-03-07 00:21:59.796331216 -0800
-@@ -171,7 +171,7 @@
-                                                              strlen(getenv("FUNC"))))) {                               \
-         fprintf(stderr, "Start of " NAME "\n");                                                                        \
-         fprintf(stderr, "---------------\n");                                                                          \
--        bb.dump();                                                                                                     \
-+        bb.print(llvm::errs());                                                                                                     \
-         fprintf(stderr, "---------------\n\n");                                                                        \
-     } else /* eat semicolon */
- 
-@@ -180,7 +180,7 @@
-                                                              strlen(getenv("FUNC"))))) {                               \
-         fprintf(stderr, "End of " NAME " %s\n", modifiedAny ? "** CHANGES **" : "");                                   \
-         fprintf(stderr, "---------------\n");                                                                          \
--        bb.dump();                                                                                                     \
-+        bb.print(llvm::errs());                                                                                                     \
-         fprintf(stderr, "---------------\n\n");                                                                        \
-     } else /* eat semicolon */
- 
-@@ -493,7 +493,7 @@
- void Optimize(llvm::Module *module, int optLevel) {
-     if (g->debugPrint) {
-         printf("*** Code going into optimization ***\n");
--        module->dump();
-+        module->print(llvm::errs());
-     }
-     DebugPassManager optPM;
-     optPM.add(llvm::createVerifierPass(), 0);
-@@ -878,7 +878,7 @@
- 
-     if (g->debugPrint) {
-         printf("\n*****\nFINAL OUTPUT\n*****\n");
--        module->dump();
-+        module->print(llvm::errs());
-     }
- }
- 
