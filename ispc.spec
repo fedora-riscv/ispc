@@ -3,11 +3,11 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.10.0	
+Version:	1.11.0	
 %if %{with_snapshot}
 Release:	20190304.%{shortcommit}%{?dist}
 %else
-Release:	4%{?dist}
+Release:	1%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -60,12 +60,12 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 
 %build
 # Disable examples otherwise build fails
-%cmake -DISPC_INCLUDE_EXAMPLES=OFF \
+%cmake -DISPC_INCLUDE_EXAMPLES=ON \
 	-DCMAKE_BUILD_TYPE=release \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DCMAKE_EXE_LINKER_FLAGS="%{optflags} -fPIE" \
 	.
-%make_build 
+%make_build OPT="%{optflags}" LDFLAGS="%{__global_ldflags}"
 
 %install
 %make_install
@@ -76,6 +76,10 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %{_bindir}/check_isa
 
 %changelog
+* Sat Apr 20 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.11.0-1
+- Update to 1.11.0
+- Re-enable examples
+
 * Thu Mar 07 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.10.0-4
 - Add exe_linker_flag for cmake compilation
 - Disable examples

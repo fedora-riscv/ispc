@@ -1,12 +1,12 @@
-diff -ru ispc-1.10.0.origin/Makefile ispc-1.10.0/Makefile
---- ispc-1.10.0.origin/Makefile	2019-01-18 17:23:04.000000000 -0800
-+++ ispc-1.10.0/Makefile	2019-01-28 01:39:21.531542020 -0800
+diff -ru ispc-1.11.0.orig/Makefile ispc-1.11.0/Makefile
+--- ispc-1.11.0.orig/Makefile	2019-04-19 16:28:43.000000000 -0700
++++ ispc-1.11.0/Makefile	2019-04-21 12:51:03.882112377 -0700
 @@ -175,11 +175,11 @@
  	$(LLVM_VERSION_DEF) \
  	-Wall \
  	-DBUILD_DATE="\"$(BUILD_DATE)\"" -DBUILD_VERSION="\"$(BUILD_VERSION)\"" \
 -	-Wno-sign-compare -Wno-unused-function $(WERROR)
-+	-Wno-sign-compare -Wno-unused-function
++	-Wno-sign-compare -Wno-unused-function 
  
  # if( !($(LLVM_VERSION) == LLVM_3_2 || $(LLVM_VERSION) == LLVM_3_3 || $(LLVM_VERSION) == LLVM_3_4))
  ifeq (,$(filter $(LLVM_VERSION), LLVM_3_2 LLVM_3_3 LLVM_3_4))
@@ -129,18 +129,38 @@ diff -ru ispc-1.10.0.origin/Makefile ispc-1.10.0/Makefile
 -	@$(CLANG) -E -x c -DISPC_MASK_BITS=64 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
 +	$(CLANG) -E -x c -DISPC_MASK_BITS=64 -DISPC=1 -DPI=3.14159265358979 $< -o - | \
  		python stdlib2cpp.py mask64 > $@
-diff -ru ispc-1.10.0.origin/src/llvmutil.cpp ispc-1.10.0/src/llvmutil.cpp
---- ispc-1.10.0.origin/src/llvmutil.cpp	2019-01-18 17:23:04.000000000 -0800
-+++ ispc-1.10.0/src/llvmutil.cpp	2019-01-28 14:58:14.128971438 -0800
-@@ -45,6 +45,7 @@
-   #include <llvm/IR/Instructions.h>
-   #include <llvm/IR/BasicBlock.h>
- #endif
-+#include <llvm/Support/raw_os_ostream.h>
- #include <set>
- #include <map>
+diff -ru ispc-1.11.0.orig/src/llvmutil.cpp ispc-1.11.0/src/llvmutil.cpp
+--- ispc-1.11.0.orig/src/llvmutil.cpp	2019-04-19 16:28:43.000000000 -0700
++++ ispc-1.11.0/src/llvmutil.cpp	2019-04-20 16:04:44.137970246 -0700
+@@ -1041,11 +1041,11 @@
  
-@@ -1550,7 +1551,7 @@
+ #if 0
+     fprintf(stderr, "all equal: ");
+-    v->dump();
++    v->print(llvm::errs());
+     fprintf(stderr, "\n");
+     llvm::Instruction *inst = llvm::dyn_cast<llvm::Instruction>(v);
+     if (inst) {
+-        inst->getParent()->dump();
++        inst->getParent()->print(llvm::errs());
+         fprintf(stderr, "\n");
+         fprintf(stderr, "\n");
+     }
+@@ -1305,11 +1305,11 @@
+ 
+ #if 0
+     fprintf(stderr, "linear check: ");
+-    v->dump();
++    v->print(llvm::errs());
+     fprintf(stderr, "\n");
+     llvm::Instruction *inst = llvm::dyn_cast<llvm::Instruction>(v);
+     if (inst) {
+-        inst->getParent()->dump();
++        inst->getParent()->print(llvm::errs());
+         fprintf(stderr, "\n");
+         fprintf(stderr, "\n");
+     }
+@@ -1349,7 +1349,7 @@
          return;
  
      fprintf(stderr, "  ");
@@ -149,51 +169,84 @@ diff -ru ispc-1.10.0.origin/src/llvmutil.cpp ispc-1.10.0/src/llvmutil.cpp
      done.insert(v);
  
      if (inst == NULL)
-diff -ru ispc-1.10.0.origin/src/opt.cpp ispc-1.10.0/src/opt.cpp
---- ispc-1.10.0.origin/src/opt.cpp	2019-01-18 17:23:04.000000000 -0800
-+++ ispc-1.10.0/src/opt.cpp	2019-01-28 15:30:04.650372035 -0800
-@@ -173,7 +173,7 @@
-                   strlen(getenv("FUNC"))))) {                           \
-         fprintf(stderr, "Start of " NAME "\n");                \
-         fprintf(stderr, "---------------\n");                  \
--        bb.dump();                                             \
-+        bb.print(llvm::errs());                                             \
-         fprintf(stderr, "---------------\n\n");                \
+diff -ru ispc-1.11.0.orig/src/opt.cpp ispc-1.11.0/src/opt.cpp
+--- ispc-1.11.0.orig/src/opt.cpp	2019-04-19 16:28:43.000000000 -0700
++++ ispc-1.11.0/src/opt.cpp	2019-04-20 16:09:04.572689746 -0700
+@@ -175,7 +175,7 @@
+                                                                        getenv("FUNC"), strlen(getenv("FUNC")))))) {    \
+         fprintf(stderr, "Start of " NAME "\n");                                                                        \
+         fprintf(stderr, "---------------\n");                                                                          \
+-        bb.dump();                                                                                                     \
++        bb.print(llvm::errs());                                                                                                     \
+         fprintf(stderr, "---------------\n\n");                                                                        \
      } else /* eat semicolon */
  
-@@ -184,7 +184,7 @@
-                   strlen(getenv("FUNC"))))) {                           \
-         fprintf(stderr, "End of " NAME " %s\n", modifiedAny ? "** CHANGES **" : ""); \
-         fprintf(stderr, "---------------\n");                  \
--        bb.dump();                                             \
-+        bb.print(llvm::errs());                                             \
-         fprintf(stderr, "---------------\n\n");                \
+@@ -185,7 +185,7 @@
+                                                                        getenv("FUNC"), strlen(getenv("FUNC")))))) {    \
+         fprintf(stderr, "End of " NAME " %s\n", modifiedAny ? "** CHANGES **" : "");                                   \
+         fprintf(stderr, "---------------\n");                                                                          \
+-        bb.dump();                                                                                                     \
++        bb.print(llvm::errs());                                                                                                     \
+         fprintf(stderr, "---------------\n\n");                                                                        \
      } else /* eat semicolon */
- 
-@@ -537,7 +537,7 @@
- Optimize(llvm::Module *module, int optLevel) {
+ #else
+@@ -406,7 +406,7 @@
+             llvm::TargetMachine *targetMachine = g->target->GetTargetMachine();
+             const llvm::TargetData *td = targetMachine->getTargetData();
+             llvm::Constant *c = llvm::ConstantFoldConstantExpression(ce, td);
+-            c->dump();
++            c->print(llvm::errs());
+             factor = c;
+         }
+         // else we should be able to handle it above...
+@@ -505,7 +505,7 @@
+ #ifndef ISPC_NO_DUMPS
      if (g->debugPrint) {
          printf("*** Code going into optimization ***\n");
 -        module->dump();
-+        module->print(llvm::errs(), nullptr);
++        module->print(llvm::errs());
      }
+ #endif
      DebugPassManager optPM;
-     optPM.add(llvm::createVerifierPass(),0);
-@@ -932,7 +932,7 @@
- 
+@@ -892,7 +892,7 @@
+ #ifndef ISPC_NO_DUMPS
      if (g->debugPrint) {
          printf("\n*****\nFINAL OUTPUT\n*****\n");
 -        module->dump();
-+        module->print(llvm::errs(), nullptr);
++        module->print(llvm::errs());
      }
- 
+ #endif
  }
-@@ -4895,7 +4895,7 @@
- DebugPass::runOnModule(llvm::Module &module) {
+@@ -1859,7 +1859,7 @@
+ static llvm::Value *
+ lExtractUniforms(llvm::Value **vec, llvm::Instruction *insertBefore) {
+     fprintf(stderr, " lextract: ");
+-    (*vec)->dump();
++    (*vec)->print(llvm::errs());
+     fprintf(stderr, "\n");
+ 
+     if (llvm::isa<llvm::ConstantVector>(*vec) ||
+@@ -1944,11 +1944,11 @@
+                            llvm::Value *offsetScale,
+                            llvm::Instruction *insertBefore) {
+ #if 1
+-    (*basePtr)->dump();
++    (*basePtr)->print(llvm::errs());
+     printf("\n");
+-    (*offsetVector)->dump();
++    (*offsetVector)->print(llvm::errs());
+     printf("\n");
+-    offsetScale->dump();
++    offsetScale->print(llvm::errs());
+     printf("-----\n");
+ #endif
+ 
+@@ -4394,7 +4394,7 @@
+ bool DebugPass::runOnModule(llvm::Module &module) {
      fprintf(stderr, "%s", str_output);
      fflush(stderr);
 -    module.dump();
-+    module.print(llvm::errs(), nullptr);
++    module.print(llvm::errs());
      return true;
  }
  
