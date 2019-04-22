@@ -1,12 +1,24 @@
+diff -ru ispc-1.11.0.orig/CMakeLists.txt ispc-1.11.0/CMakeLists.txt
+--- ispc-1.11.0.orig/CMakeLists.txt	2019-04-19 16:28:43.000000000 -0700
++++ ispc-1.11.0/CMakeLists.txt	2019-04-22 00:10:26.698430396 -0700
+@@ -236,7 +236,7 @@
+     target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
+     if (UNIX)
+         set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
+-        target_compile_options(${PROJECT_NAME} PRIVATE -Wno-c99-extensions -Wno-deprecated-register -fno-rtti)
++        target_compile_options(${PROJECT_NAME} PRIVATE -fno-rtti)
+         if (ISPC_USE_ASAN)
+             target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=address)
+         endif()
 diff -ru ispc-1.11.0.orig/Makefile ispc-1.11.0/Makefile
 --- ispc-1.11.0.orig/Makefile	2019-04-19 16:28:43.000000000 -0700
-+++ ispc-1.11.0/Makefile	2019-04-21 12:51:03.882112377 -0700
++++ ispc-1.11.0/Makefile	2019-04-21 23:59:38.189050091 -0700
 @@ -175,11 +175,11 @@
  	$(LLVM_VERSION_DEF) \
  	-Wall \
  	-DBUILD_DATE="\"$(BUILD_DATE)\"" -DBUILD_VERSION="\"$(BUILD_VERSION)\"" \
 -	-Wno-sign-compare -Wno-unused-function $(WERROR)
-+	-Wno-sign-compare -Wno-unused-function 
++	-Wno-sign-compare -Wno-unused-function
  
  # if( !($(LLVM_VERSION) == LLVM_3_2 || $(LLVM_VERSION) == LLVM_3_3 || $(LLVM_VERSION) == LLVM_3_4))
  ifeq (,$(filter $(LLVM_VERSION), LLVM_3_2 LLVM_3_3 LLVM_3_4))
@@ -204,7 +216,7 @@ diff -ru ispc-1.11.0.orig/src/opt.cpp ispc-1.11.0/src/opt.cpp
      if (g->debugPrint) {
          printf("*** Code going into optimization ***\n");
 -        module->dump();
-+        module->print(llvm::errs());
++        module->print(llvm::errs(), nullptr);
      }
  #endif
      DebugPassManager optPM;
@@ -213,7 +225,7 @@ diff -ru ispc-1.11.0.orig/src/opt.cpp ispc-1.11.0/src/opt.cpp
      if (g->debugPrint) {
          printf("\n*****\nFINAL OUTPUT\n*****\n");
 -        module->dump();
-+        module->print(llvm::errs());
++        module->print(llvm::errs(), nullptr);
      }
  #endif
  }
@@ -246,7 +258,7 @@ diff -ru ispc-1.11.0.orig/src/opt.cpp ispc-1.11.0/src/opt.cpp
      fprintf(stderr, "%s", str_output);
      fflush(stderr);
 -    module.dump();
-+    module.print(llvm::errs());
++    module.print(llvm::errs(), nullptr);
      return true;
  }
  

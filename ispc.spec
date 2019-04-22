@@ -37,7 +37,8 @@ BuildRequires:	/usr/lib/crt1.o
 BuildRequires:	zlib-devel
 
 
-# Set verbose compilation and remove -Werror on Makefile
+# Set verbose compilation remove -Werror on Makefile
+# Also remove uses of llvm dump
 Patch1:		0002-Remove-uses-of-LLVM-dump-functions-and-verbose-makefile.patch
 
 %description
@@ -51,7 +52,7 @@ A compiler for a variant of the C programming language, with extensions for
 %autosetup -p1 -n %{name}-%{version}
 %endif
 
-# Use gcc rather clang
+# Use gcc rather clang by default
 sed -i 's|set(CMAKE_C_COMPILER "clang")|set(CMAKE_C_COMPILER "gcc")|g' CMakeLists.txt
 sed -i 's|set(CMAKE_CXX_COMPILER "clang++")|set(CMAKE_CXX_COMPILER "g++")|g' CMakeLists.txt
 
@@ -60,7 +61,7 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 
 %build
 # Disable examples otherwise build fails
-%cmake -DISPC_INCLUDE_EXAMPLES=ON \
+%cmake  -DISPC_INCLUDE_EXAMPLES=OFF \
 	-DCMAKE_BUILD_TYPE=release \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DCMAKE_EXE_LINKER_FLAGS="%{optflags} -fPIE" \
@@ -78,7 +79,7 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %changelog
 * Sat Apr 20 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.11.0-1
 - Update to 1.11.0
-- Re-enable examples
+- Patch to remove obsolete wno and werror
 
 * Thu Mar 07 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.10.0-4
 - Add exe_linker_flag for cmake compilation
