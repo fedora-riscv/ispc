@@ -5,9 +5,9 @@
 Name:		ispc
 Version:	1.11.0	
 %if %{with_snapshot}
-Release:	20190304.%{shortcommit}%{?dist}
+Release:	20190305.%{shortcommit}%{?dist}
 %else
-Release:	1%{?dist}
+Release:	2%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -77,6 +77,9 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %{_bindir}/check_isa
 
 %changelog
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.11.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Sat Apr 20 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.11.0-1
 - Update to 1.11.0
 - Patch to remove obsolete wno and werror
