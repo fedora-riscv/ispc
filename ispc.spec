@@ -3,11 +3,11 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.11.0	
+Version:	1.12.0	
 %if %{with_snapshot}
 Release:	20190305.%{shortcommit}%{?dist}
 %else
-Release:	2%{?dist}
+Release:	1%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -26,7 +26,7 @@ BuildRequires:	flex
 BuildRequires:	gcc-c++
 BuildRequires:	llvm-devel
 BuildRequires:	ncurses-devel
-BuildRequires:	python2-devel
+BuildRequires:	pkgconfig(python3)
 BuildRequires:	/usr/bin/pathfix.py
 ExclusiveArch:	%{arm} %{ix86} x86_64
 # Hardcoded path from 32-bit glibc-devel needed to build
@@ -37,9 +37,8 @@ BuildRequires:	/usr/lib/crt1.o
 BuildRequires:	zlib-devel
 
 
-# Set verbose compilation remove -Werror on Makefile
-# Also remove uses of llvm dump
-Patch1:		0002-Remove-uses-of-LLVM-dump-functions-and-verbose-makefile.patch
+# Remove uses of llvm dump
+# Patch1:		0001-Remove-uses-of-LLVM-dump-functions.patch
 
 %description
 A compiler for a variant of the C programming language, with extensions for
@@ -47,9 +46,9 @@ A compiler for a variant of the C programming language, with extensions for
 
 %prep
 %if %{with_snapshot}
-%autosetup -p1 -n %{name}-%{commit}
+%autosetup -n %{name}-%{commit}
 %else
-%autosetup -p1 -n %{name}-%{version}
+%autosetup -n %{name}-%{version}
 %endif
 
 # Use gcc rather clang by default
@@ -57,15 +56,21 @@ sed -i 's|set(CMAKE_C_COMPILER "clang")|set(CMAKE_C_COMPILER "gcc")|g' CMakeList
 sed -i 's|set(CMAKE_CXX_COMPILER "clang++")|set(CMAKE_CXX_COMPILER "g++")|g' CMakeLists.txt
 
 # Fix all Python shebangs recursively in .
-pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
+pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
+
+mkdir build
 
 %build
+pushd build
 # Disable examples otherwise build fails
-%cmake  -DISPC_INCLUDE_EXAMPLES=OFF \
+%cmake  \
 	-DCMAKE_BUILD_TYPE=release \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DCMAKE_EXE_LINKER_FLAGS="%{optflags} -fPIE" \
-	.
+	-DISPC_INCLUDE_EXAMPLES=OFF \	
+	-DISPC_NO_DUMPS=ON \
+	..
+popd
 %make_build OPT="%{optflags}" LDFLAGS="%{__global_ldflags}"
 
 %install
@@ -77,6 +82,11 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %{_bindir}/check_isa
 
 %changelog
+* Fri Aug 16 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.12.0-1
+- Update to 1.12.0
+- Switch dependency to Python 3
+- Drop patches for no llvm dump
+
 * Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.11.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
