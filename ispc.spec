@@ -68,6 +68,7 @@ pushd build
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DCMAKE_EXE_LINKER_FLAGS="%{optflags} -fPIE" \
 	-DISPC_INCLUDE_EXAMPLES=OFF \
+	-DISPC_INCLUDE_TESTS=OFF \
 	-DISPC_NO_DUMPS=ON \
 	..
 %make_build OPT="%{optflags}" LDFLAGS="%{__global_ldflags}"
