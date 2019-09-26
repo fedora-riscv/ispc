@@ -82,6 +82,9 @@ popd
 %{_bindir}/check_isa
 
 %changelog
+* Fri Aug 16 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.12.0-2
+- Rebuilt to fix conflict clang librairy
+
 * Fri Aug 16 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.12.0-1
 - Update to 1.12.0
 - Switch dependency to Python 3
