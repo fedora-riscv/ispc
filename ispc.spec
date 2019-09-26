@@ -7,7 +7,7 @@ Version:	1.12.0
 %if %{with_snapshot}
 Release:	20190305.%{shortcommit}%{?dist}
 %else
-Release:	1%{?dist}
+Release:	2%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -85,7 +85,7 @@ popd
 %{_bindir}/check_isa
 
 %changelog
-* Fri Aug 16 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.12.0-2
+* Thu Sep 26 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.12.0-2
 - Rebuilt to fix conflict clang librairy
 
 * Fri Aug 16 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.12.0-1
