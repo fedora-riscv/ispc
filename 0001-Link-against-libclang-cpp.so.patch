@@ -1,0 +1,25 @@
+From 22bbf8efc0deeb62cd706f1c2fee97201eb7427a Mon Sep 17 00:00:00 2001
+From: Tom Stellard <tstellar@redhat.com>
+Date: Fri, 13 Dec 2019 00:39:17 +0000
+Subject: [PATCH] Link against libclang-cpp.so
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bd3483ab..edc97376 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -164,7 +164,7 @@ set (ISPC_TARGETS
+         avx512skx-i32x8 avx512skx-i32x16
+         generic-1 generic-4 generic-8 generic-16 generic-32 generic-64)
+ 
+-set(CLANG_LIBRARY_LIST clangFrontend clangDriver clangSerialization clangParse clangSema clangAnalysis clangAST clangBasic clangEdit clangLex)
++set(CLANG_LIBRARY_LIST clang-cpp)
+ set(LLVM_COMPONENTS engine ipo bitreader bitwriter instrumentation linker)
+ # Component "option" was introduced in 3.3 and starting with 3.4 it is required for the link step.
+ if (${LLVM_VERSION_NUMBER} VERSION_GREATER "3.3.0")
+-- 
+2.20.1
+

@@ -7,7 +7,7 @@ Version:	1.12.0
 %if %{with_snapshot}
 Release:	20190305.%{shortcommit}%{?dist}
 %else
-Release:	2%{?dist}
+Release:	3%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -36,6 +36,8 @@ BuildRequires:	/usr/lib/crt1.o
 %endif
 BuildRequires:	zlib-devel
 
+# https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
+Patch0:		0001-Link-against-libclang-cpp.so.patch
 
 # Remove uses of llvm dump
 # Patch1:		0001-Remove-uses-of-LLVM-dump-functions.patch
@@ -85,6 +87,10 @@ popd
 %{_bindir}/check_isa
 
 %changelog
+* Fri Dec 13 2019 Tom Stellard <tstellar@redhat.com> - 1.12.0-3
+- Link against libclang-cpp.so
+- https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
+
 * Thu Sep 26 2019 Luya Tshimbalanga <luya@fedoraproject.org> - 1.12.0-2
 - Rebuilt to fix conflict clang librairy
 
