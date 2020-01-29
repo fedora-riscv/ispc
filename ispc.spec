@@ -5,9 +5,9 @@
 Name:		ispc
 Version:	1.12.0	
 %if %{with_snapshot}
-Release:	20190305.%{shortcommit}%{?dist}
+Release:	20190306.%{shortcommit}%{?dist}
 %else
-Release:	3%{?dist}
+Release:	4%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -87,6 +87,9 @@ popd
 %{_bindir}/check_isa
 
 %changelog
+* Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.12.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Fri Dec 13 2019 Tom Stellard <tstellar@redhat.com> - 1.12.0-3
 - Link against libclang-cpp.so
 - https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
