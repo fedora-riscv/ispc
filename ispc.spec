@@ -25,9 +25,8 @@ BuildRequires:	doxygen
 BuildRequires:	flex 
 BuildRequires:	gcc-c++
 BuildRequires:	llvm-devel
-BuildRequires:	ncurses-devel
+BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(python3)
-BuildRequires:	/usr/bin/pathfix.py
 ExclusiveArch:	%{arm} %{ix86} x86_64
 # Hardcoded path from 32-bit glibc-devel needed to build
 # See https://github.com/ispc/ispc/wiki/Building-ispc:-Linux-and-Mac-OS-X
@@ -38,9 +37,6 @@ BuildRequires:	zlib-devel
 
 # https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
 Patch0:		0001-Link-against-libclang-cpp.so.patch
-
-# Remove uses of llvm dump
-# Patch1:		0001-Remove-uses-of-LLVM-dump-functions.patch
 
 %description
 A compiler for a variant of the C programming language, with extensions for
@@ -57,6 +53,9 @@ A compiler for a variant of the C programming language, with extensions for
 sed -i 's|set(CMAKE_C_COMPILER "clang")|set(CMAKE_C_COMPILER "gcc")|g' CMakeLists.txt
 sed -i 's|set(CMAKE_CXX_COMPILER "clang++")|set(CMAKE_CXX_COMPILER "g++")|g' CMakeLists.txt
 
+# Delete unrecognized command options from gcc-c++
+sed -i 's|-Wno-c99-extensions -Wno-deprecated-register||g' CMakeLists.txt
+
 # Fix all Python shebangs recursively in .
 pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 
@@ -66,7 +65,7 @@ mkdir build
 pushd build
 # Disable examples otherwise build fails
 %cmake \
-	-DCMAKE_BUILD_TYPE=release \
+	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DCMAKE_EXE_LINKER_FLAGS="%{optflags} -fPIE" \
 	-DISPC_INCLUDE_EXAMPLES=OFF \
