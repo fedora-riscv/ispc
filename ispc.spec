@@ -3,11 +3,11 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.12.0	
+Version:	1.13.0	
 %if %{with_snapshot}
 Release:	20190306.%{shortcommit}%{?dist}
 %else
-Release:	4%{?dist}
+Release:	1%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -87,6 +87,9 @@ popd
 %{_bindir}/check_isa
 
 %changelog
+* Fri Apr 24 2020 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.13.0-1
+- Update to 1.13.0 (#1827516)
+
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.12.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
