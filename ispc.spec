@@ -27,16 +27,19 @@ BuildRequires:	gcc-c++
 BuildRequires:	llvm-devel
 BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(python3)
-ExclusiveArch:	%{arm} %{ix86} x86_64
+
 # Hardcoded path from 32-bit glibc-devel needed to build
 # See https://github.com/ispc/ispc/wiki/Building-ispc:-Linux-and-Mac-OS-X
 %ifarch x86_64
 BuildRequires:	/usr/lib/crt1.o
 %endif
-BuildRequires:	zlib-devel
+BuildRequires:	pkgconfig(zlib)
+
+# Exlcude architectures failing to build
+ExcludeArch:	ppc64le s390x
 
 # https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
-Patch0:		0001-Link-against-libclang-cpp.so.patch
+Patch0:	0001-Link-against-libclang-cpp.so.patch
 
 %description
 A compiler for a variant of the C programming language, with extensions for
@@ -55,6 +58,9 @@ sed -i 's|set(CMAKE_CXX_COMPILER "clang++")|set(CMAKE_CXX_COMPILER "g++")|g' CMa
 
 # Delete unrecognized command options from gcc-c++
 sed -i 's|-Wno-c99-extensions -Wno-deprecated-register||g' CMakeLists.txt
+
+# Suppress warning message as error
+sed -i 's| -Werror ||g' CMakeLists.txt 
 
 # Fix all Python shebangs recursively in .
 pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
@@ -88,6 +94,8 @@ popd
 %changelog
 * Fri Apr 24 2020 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.13.0-1
 - Update to 1.13.0 (#1827516)
+- Disable warning treated as error message
+- Only exclude ppc64le and s390x architectures
 
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.12.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
