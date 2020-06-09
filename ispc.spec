@@ -7,7 +7,7 @@ Version:	1.13.0
 %if %{with_snapshot}
 Release:	20190306.%{shortcommit}%{?dist}
 %else
-Release:	1%{?dist}
+Release:	2%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -36,7 +36,7 @@ BuildRequires:	/usr/lib/crt1.o
 BuildRequires:	pkgconfig(zlib)
 
 # Exlcude architectures failing to build
-ExcludeArch:	ppc64le s390x
+ExcludeArch:	%{ix86} ppc64le s390x
 
 # https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
 Patch0:	0001-Link-against-libclang-cpp.so.patch
@@ -92,6 +92,9 @@ popd
 %{_bindir}/check_isa
 
 %changelog
+* Tue Jun 09 2020 Luya Tshimbalanga <luya@fedoraproject.org> - 1.13.0-2
+- Exclude i686 architecture
+
 * Fri Apr 24 2020 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.13.0-1
 - Update to 1.13.0 (#1827516)
 - Disable warning treated as error message
