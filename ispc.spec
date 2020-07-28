@@ -5,9 +5,9 @@
 Name:		ispc
 Version:	1.13.0	
 %if %{with_snapshot}
-Release:	20190306.%{shortcommit}%{?dist}
+Release:	20190307.%{shortcommit}%{?dist}
 %else
-Release:	2%{?dist}
+Release:	3%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -92,6 +92,9 @@ popd
 %{_bindir}/check_isa
 
 %changelog
+* Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.13.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Tue Jun 09 2020 Luya Tshimbalanga <luya@fedoraproject.org> - 1.13.0-2
 - Exclude i686 architecture
 
