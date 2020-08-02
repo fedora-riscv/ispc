@@ -3,11 +3,11 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.13.0	
+Version:	1.14.0	
 %if %{with_snapshot}
 Release:	20190308.%{shortcommit}%{?dist}
 %else
-Release:	4%{?dist}
+Release:	1%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -36,7 +36,7 @@ BuildRequires:	/usr/lib/crt1.o
 BuildRequires:	pkgconfig(zlib)
 
 # Exlcude architectures failing to build
-ExcludeArch:	%{ix86} ppc64le s390x
+ExclusiveArch:	x86_64 aarch64
 
 # https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
 Patch0:	0001-Link-against-libclang-cpp.so.patch
@@ -65,10 +65,7 @@ sed -i 's| -Werror ||g' CMakeLists.txt
 # Fix all Python shebangs recursively in .
 pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 
-mkdir build
-
 %build
-pushd build
 # Disable examples otherwise build fails
 %cmake \
 	-DCMAKE_BUILD_TYPE=Release \
@@ -77,14 +74,11 @@ pushd build
 	-DISPC_INCLUDE_EXAMPLES=OFF \
 	-DISPC_INCLUDE_TESTS=OFF \
 	-DISPC_NO_DUMPS=ON \
-	..
-%make_build OPT="%{optflags}" LDFLAGS="%{__global_ldflags}"
-popd
+	.
+%cmake_build
 
 %install
-pushd build
-%make_install
-popd
+%cmake_install
 
 %files
 %license LICENSE.txt
@@ -92,6 +86,9 @@ popd
 %{_bindir}/check_isa
 
 %changelog
+* Sat Aug 01 2020 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.14.0-1
+- Update to 1.14.0 (#1862505)
+
 * Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.13.0-4
 - Second attempt - Rebuilt for
   https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild

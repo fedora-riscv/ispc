@@ -11,8 +11,8 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index bd3483ab..edc97376 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -209,7 +209,7 @@
-     endif()
+@@ -229,7 +229,7 @@
+     list(APPEND ISPC_TARGETS wasm-i32x4)
  endif()
  
 -set(CLANG_LIBRARY_LIST clangFrontend clangDriver clangSerialization clangParse clangSema clangAnalysis clangAST clangBasic clangEdit clangLex)
