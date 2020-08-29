@@ -3,7 +3,7 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.14.0	
+Version:	1.14.1	
 %if %{with_snapshot}
 Release:	20190308.%{shortcommit}%{?dist}
 %else
@@ -86,6 +86,9 @@ pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 %{_bindir}/check_isa
 
 %changelog
+* Sat Aug 29 2020 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.14.1-1
+- Update to 1.14.1 (#1862505)
+
 * Sat Aug 01 2020 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.14.0-1
 - Update to 1.14.0 (#1862505)
 
