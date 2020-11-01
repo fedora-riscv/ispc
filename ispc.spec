@@ -7,7 +7,7 @@ Version:	1.14.1
 %if %{with_snapshot}
 Release:	20190308.%{shortcommit}%{?dist}
 %else
-Release:	1%{?dist}
+Release:	2%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
