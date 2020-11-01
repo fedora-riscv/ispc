@@ -27,7 +27,6 @@ BuildRequires:	gcc-c++
 BuildRequires:	llvm-devel
 BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(python3)
-
 # Hardcoded path from 32-bit glibc-devel needed to build
 # See https://github.com/ispc/ispc/wiki/Building-ispc:-Linux-and-Mac-OS-X
 %ifarch x86_64
@@ -66,15 +65,13 @@ sed -i 's| -Werror ||g' CMakeLists.txt
 pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 
 %build
-# Disable examples otherwise build fails
 %cmake \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DCMAKE_EXE_LINKER_FLAGS="%{optflags} -fPIE" \
 	-DISPC_INCLUDE_EXAMPLES=OFF \
 	-DISPC_INCLUDE_TESTS=OFF \
-	-DISPC_NO_DUMPS=ON \
-	.
+	-DISPC_NO_DUMPS=ON 
 %cmake_build
 
 %install
@@ -86,6 +83,9 @@ pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 %{_bindir}/check_isa
 
 %changelog
+* Sat Oct 31 2020 Luya Tshimbalanga <luya@fedoraproject.org> - 1.14.1-2
+- Rebuild for llvm 11
+
 * Sat Aug 29 2020 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.14.1-1
 - Update to 1.14.1 (#1862505)
 
