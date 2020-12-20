@@ -3,11 +3,11 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.14.1	
+Version:	1.15.0	
 %if %{with_snapshot}
 Release:	20190308.%{shortcommit}%{?dist}
 %else
-Release:	2%{?dist}
+Release:	1%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -83,6 +83,9 @@ pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 %{_bindir}/check_isa
 
 %changelog
+* Sat Dec 19 2020 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.15.0-1
+- Update to 1.15.0 (#1909333)
+
 * Sat Oct 31 2020 Luya Tshimbalanga <luya@fedoraproject.org> - 1.14.1-2
 - Rebuild for llvm 11
 
