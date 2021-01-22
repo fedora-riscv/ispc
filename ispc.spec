@@ -7,7 +7,7 @@ Version:	1.15.0
 %if %{with_snapshot}
 Release:	20190308.%{shortcommit}%{?dist}
 %else
-Release:	1%{?dist}
+Release:	2%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -39,6 +39,10 @@ ExclusiveArch:	x86_64 aarch64
 
 # https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
 Patch0:	0001-Link-against-libclang-cpp.so.patch
+# The version checks don't work correctly when they contain a minor version that
+# is not 0.  This fixes the build with LLVM 11.1.0, which is nearly identical to
+# LLVM 11.0.1.
+Patch1: 0001-Hard-code-LLVM_VERSION_MINOR-to-0-to-fix-build-with-.patch
 
 %description
 A compiler for a variant of the C programming language, with extensions for
@@ -46,9 +50,9 @@ A compiler for a variant of the C programming language, with extensions for
 
 %prep
 %if %{with_snapshot}
-%autosetup -n %{name}-%{commit}
+%autosetup -n %{name}-%{commit} -p1
 %else
-%autosetup -n %{name}-%{version}
+%autosetup -n %{name}-%{version} -p1
 %endif
 
 # Use gcc rather clang by default
@@ -83,6 +87,9 @@ pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 %{_bindir}/check_isa
 
 %changelog
+* Fri Jan 22 2021 Tom Stellard <tstellar@redhat.com> - 1.15.0-2
+- Rebuild for clang-11.1.0
+
 * Sat Dec 19 2020 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.15.0-1
 - Update to 1.15.0 (#1909333)
 
