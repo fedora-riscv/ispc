@@ -5,9 +5,9 @@
 Name:		ispc
 Version:	1.15.0	
 %if %{with_snapshot}
-Release:	20190308.%{shortcommit}%{?dist}
+Release:	20190309.%{shortcommit}%{?dist}
 %else
-Release:	2%{?dist}
+Release:	3%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -87,6 +87,9 @@ pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 %{_bindir}/check_isa
 
 %changelog
+* Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.15.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Fri Jan 22 2021 Tom Stellard <tstellar@redhat.com> - 1.15.0-2
 - Rebuild for clang-11.1.0
 
