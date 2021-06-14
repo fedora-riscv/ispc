@@ -3,11 +3,11 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.15.0	
+Version:	1.16.0
 %if %{with_snapshot}
-Release:	20190309.%{shortcommit}%{?dist}
+Release:	1%{?dist}
 %else
-Release:	3%{?dist}
+Release:	1%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -34,15 +34,11 @@ BuildRequires:	/usr/lib/crt1.o
 %endif
 BuildRequires:	pkgconfig(zlib)
 
-# Exlcude architectures failing to build
+# Upstream only supports these architectures
 ExclusiveArch:	x86_64 aarch64
 
 # https://fedoraproject.org/wiki/Changes/Stop-Shipping-Individual-Component-Libraries-In-clang-lib-Package
 Patch0:	0001-Link-against-libclang-cpp.so.patch
-# The version checks don't work correctly when they contain a minor version that
-# is not 0.  This fixes the build with LLVM 11.1.0, which is nearly identical to
-# LLVM 11.0.1.
-Patch1: 0001-Hard-code-LLVM_VERSION_MINOR-to-0-to-fix-build-with-.patch
 
 %description
 A compiler for a variant of the C programming language, with extensions for
@@ -66,7 +62,7 @@ sed -i 's|-Wno-c99-extensions -Wno-deprecated-register||g' CMakeLists.txt
 sed -i 's| -Werror ||g' CMakeLists.txt 
 
 # Fix all Python shebangs recursively in .
-pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
+%py3_shebang_fix .
 
 %build
 %cmake \
@@ -87,6 +83,10 @@ pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 %{_bindir}/check_isa
 
 %changelog
+* Sat Jun 12 2021 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.16.0-1
+- Update to 1.16.0 (#1971133)
+- Resolves rhbz#1971133
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.15.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
