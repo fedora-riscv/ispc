@@ -5,9 +5,9 @@
 Name:		ispc
 Version:	1.16.0
 %if %{with_snapshot}
-Release:	1%{?dist}
+Release:	2%{?dist}
 %else
-Release:	1%{?dist}
+Release:	2%{?dist}
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -83,6 +83,9 @@ sed -i 's| -Werror ||g' CMakeLists.txt
 %{_bindir}/check_isa
 
 %changelog
+* Thu Jul 22 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.16.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Sat Jun 12 2021 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 1.16.0-1
 - Update to 1.16.0 (#1971133)
 - Resolves rhbz#1971133
