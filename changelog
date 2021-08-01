@@ -1,4 +1,4 @@
-* Sun Aug 01 2021 Luya Tshimbalanga <luya@fedoraproject.org> 1.16.1-1
+* Sun Aug 01 2021 Luya Tshimbalanga <luya@fedoraproject.org> 1.16.1-2
 - Use autorelease and autochangelog macros
 - Resolves rhbz#1983136
 
@@ -41,4 +41,5 @@
 - Update to 1.13.0 (#1827516)
 - Disable warning treated as error message
 - Only exclude ppc64le and s390x architectures
+
 
