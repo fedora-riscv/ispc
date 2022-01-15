@@ -3,7 +3,7 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.16.1
+Version:	1.17.0
 %if %{with_snapshot}
 Release:	%autorelease -p -s %{shortcommit}
 %else
@@ -71,7 +71,10 @@ sed -i 's| -Werror ||g' CMakeLists.txt
 	-DCMAKE_EXE_LINKER_FLAGS="%{optflags} -fPIE" \
 	-DISPC_INCLUDE_EXAMPLES=OFF \
 	-DISPC_INCLUDE_TESTS=OFF \
-	-DISPC_NO_DUMPS=ON 
+	-DISPC_NO_DUMPS=ON \
+	-DLEVEL_ZERO_INCLUDE_DIR=%{_includedir} \
+	-DLEVEL_ZERO_LIB_LOADER=%{_libddir} \
+	-DLLVM_ENABLE_ASSERTIONS=OFF 
 %cmake_build
 
 %install
