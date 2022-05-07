@@ -3,7 +3,7 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:		ispc
-Version:	1.17.0
+Version:	1.18.0
 %if %{with_snapshot}
 Release:	%autorelease -p -s %{shortcommit}
 %else
@@ -44,6 +44,14 @@ Patch0:	0001-Link-against-libclang-cpp.so.patch
 A compiler for a variant of the C programming language, with extensions for
 "single program, multiple data" (SPMD) programming.
 
+%package	devel
+Summary:	Development files for %{name}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+
+%description	devel
+The %{name}-devel package contains libraries and header files for
+ applications that use %{name}.
+ 
 %prep
 %if %{with_snapshot}
 %autosetup -n %{name}-%{commit} -p1
@@ -80,11 +88,20 @@ sed -i 's| -Werror ||g' CMakeLists.txt
 %install
 %cmake_install
 
+#Remove static file
+rm %{buildroot}%{_libdir}/lib%{name}rt_static.a
+
 %files
 %license LICENSE.txt
 %{_bindir}/%{name}
 %{_bindir}/check_isa
+%{_libdir}/lib%{name}rt.so.1
+%{_libdir}/lib%{name}rt.so.1.18.0
+
+%files devel
+%{_includedir}/%{name}rt/
+%{_libdir}/cmake/%{name}rt-%{version}/
+%{_libdir}/lib%{name}rt.so
 
 %changelog
 %autochangelog
-
