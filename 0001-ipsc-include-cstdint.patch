@@ -1,0 +1,12 @@
+diff -ru ispc-1.19.0.original/src/target_registry.h ispc-1.19.0/src/target_registry.h
+--- ispc-1.19.0.original/src/target_registry.h	2023-02-27 23:53:24.000000000 -0800
++++ ispc-1.19.0/src/target_registry.h	2023-02-28 16:58:36.179549748 -0800
+@@ -41,6 +41,7 @@
+ 
+ #include <bitset>
+ #include <map>
++#include <cstdint>
+ #include <vector>
+ 
+ namespace ispc {
+
