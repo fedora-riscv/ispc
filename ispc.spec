@@ -7,7 +7,7 @@ Version:	1.21.0
 %if %{with_snapshot}
 Release:	%autorelease -p -s 20230102git%{shortcommit}
 %else
-Release:	%autorelease
+Release:	%autorelease -e rv64
 %endif
 Summary:	C-based SPMD programming language compiler
 
@@ -38,7 +38,7 @@ BuildRequires:  pkgconfig(tbb)
 BuildRequires:	pkgconfig(zlib)
 
 # Upstream only supports these architectures
-ExclusiveArch:	x86_64 aarch64
+ExclusiveArch:	x86_64 aarch64 riscv64
 
 %description
 A compiler for a variant of the C programming language, with extensions for
